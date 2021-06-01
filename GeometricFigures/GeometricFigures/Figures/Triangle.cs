@@ -7,16 +7,13 @@ namespace GeometricFigures.Figures
         private double _a;
         private double _b;
         private double _c;
-        public override void GetFigureParameters()
+
+
+        public Triangle(double a, double b, double c)
         {
-            Console.Write("Enter a side of the triangle: ");
-            _a = double.Parse(Console.ReadLine());
-
-            Console.Write("Enter b side of the triangle: ");
-            _b = double.Parse(Console.ReadLine());
-
-            Console.Write("Enter c side of the triangle: ");
-            _c = double.Parse(Console.ReadLine());
+            _a = a;
+            _b = b;
+            _c = c;
         }
 
         public override double GetPerimeter()

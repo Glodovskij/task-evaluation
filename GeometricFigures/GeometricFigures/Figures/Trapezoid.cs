@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GeometricFigures.Figures
+﻿namespace GeometricFigures.Figures
 {
     class Trapezoid : Figure
     {
@@ -9,22 +7,14 @@ namespace GeometricFigures.Figures
         private double _c;
         private double _d;
         private double _h; // Высота.
-        public override void GetFigureParameters()
+
+        public Trapezoid(double a, double b, double c, double d, double h)
         {
-            Console.Write("Enter a base of the trapezoid: ");
-            _a = double.Parse(Console.ReadLine());
-
-            Console.Write("Enter b base of the trapezoid: ");
-            _b = double.Parse(Console.ReadLine());
-
-            Console.Write("Enter c side of the trapezoid: ");
-            _a = double.Parse(Console.ReadLine());
-
-            Console.Write("Enter d side of the trapezoid: ");
-            _b = double.Parse(Console.ReadLine());
-
-            Console.Write("Enter h heihgt of the trapezoid: ");
-            _h = double.Parse(Console.ReadLine());
+            _a = a;
+            _b = b;
+            _c = c;
+            _d = d;
+            _h = h;
         }
 
         public override double GetPerimeter()

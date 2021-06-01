@@ -4,17 +4,14 @@ namespace GeometricFigures.Figures
 {
     public class Ellipsoid : Figure
     {
+        public Ellipsoid(double semiMinor, double semiMajor)
+        {
+            _semiMajor = semiMajor;
+            _semiMinor = semiMinor;
+        }
+
         private double _semiMinor; // Малая ось.
         private double _semiMajor; // Большая ось.
-
-        public override void GetFigureParameters()
-        {
-            Console.Write("Enter semi-minor axis: ");
-            _semiMinor = double.Parse(Console.ReadLine());
-
-            Console.Write("Enter semi-major axis: ");
-            _semiMajor = double.Parse(Console.ReadLine());
-        }
 
         public override double GetPerimeter()
         {
