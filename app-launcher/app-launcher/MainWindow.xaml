@@ -4,9 +4,51 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:app_launcher"
+        xmlns:dc="clr-namespace:app_launcher.Domain"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.DataContext>
+        <dc:ApplicationViewModel/>
+    </Window.DataContext>
     <Grid>
+        <DataGrid
+            ItemsSource="{Binding AppModels}"
+            AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Stretch="None" Source="{Binding DisplayImage}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Name" Binding="{Binding DisplayName}" IsReadOnly="True"/>
+            </DataGrid.Columns>
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <ListView 
+                        x:Name="ExecutablesListView"
+                        ItemsSource="{Binding ExecutableModels}" 
+                        Height="100"
+                        Background="#f5f5f5">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="{Binding ExecutableIcon}" />
+                                    <TextBlock VerticalAlignment="Center" Text="{Binding ExecutableName}" />
+                                    <StackPanel.InputBindings>
+                                        <MouseBinding 
+                                            MouseAction="LeftDoubleClick"
+                                            Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.LaunchAppCommand}"
+                                            CommandParameter="{Binding ElementName=ExecutablesListView, Path=SelectedItem}"/>
 
+                                    </StackPanel.InputBindings>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
+        </DataGrid>
     </Grid>
 </Window>
