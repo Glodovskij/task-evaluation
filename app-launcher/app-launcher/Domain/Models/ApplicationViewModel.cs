@@ -1,5 +1,6 @@
 ﻿using app_launcher.Domain.Commands;
 using Microsoft.Win32;
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -20,9 +21,9 @@ namespace app_launcher.Domain
 
         public ICommand LaunchAppCommand
         {
-            get 
+            get
             {
-                return _launchAppCommand ?? (_launchAppCommand = new RelayCommand(LaunchAppByDoubleClick)); 
+                return _launchAppCommand ?? (_launchAppCommand = new RelayCommand(LaunchAppByDoubleClick));
             }
         }
 
@@ -30,7 +31,7 @@ namespace app_launcher.Domain
         {
             AppModels = new ObservableCollection<ApplicationModel>();
             ExtractAppDataFromRegistry();
-            Task.Run (() => FillAppModelsWithExecutables());
+            Task.Run(() => FillAppModelsWithExecutables());
         }
 
         private void ExtractAppDataFromRegistry()
@@ -42,23 +43,31 @@ namespace app_launcher.Domain
                 {
                     using (RegistryKey subkey = key.OpenSubKey(subkey_name))
                     {
-                        try
-                        {
-                            if (!string.IsNullOrEmpty(subkey.GetValue("InstallLocation").ToString()))
-                            {
-                                AppModels.Add(new ApplicationModel
-                                { 
-                                    DisplayImage = ExtractExecutableIcon(subkey.GetValue("DisplayIcon").ToString()),
-                                    DisplayName = subkey.GetValue("DisplayName").ToString(),
-                                    InstallLocation = subkey.GetValue("InstallLocation").ToString()
-                                });
-                            }
-                        }
-                        catch
+                        if (subkey.GetValue("InstallLocation") == null ||
+                            subkey.GetValue("DisplayIcon") == null ||
+                            subkey.GetValue("DisplayName") == null)
                         {
                             continue;
                         }
 
+                        try
+                        {
+                            AppModels.Add(new ApplicationModel
+                            {
+                                DisplayImage = ExtractExecutableIcon(subkey.GetValue("DisplayIcon").ToString()),
+                                DisplayName = subkey.GetValue("DisplayName").ToString(),
+                                InstallLocation = subkey.GetValue("InstallLocation").ToString()
+
+                            });
+                        }
+                        catch(FileNotFoundException)
+                        {
+                            //error while parsing icon
+                        }
+                        catch(ArgumentException)
+                        {
+                            //not happened yet
+                        }
                     }
                 }
             }
@@ -76,7 +85,7 @@ namespace app_launcher.Domain
 
         private void FillAppModelsWithExecutables()
         {
-            foreach(ApplicationModel appModel in AppModels)
+            foreach (ApplicationModel appModel in AppModels)
             {
                 SearchExecutablesInDirectory(appModel.InstallLocation, appModel);
             }

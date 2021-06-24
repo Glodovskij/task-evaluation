@@ -33,7 +33,7 @@
                         Background="#f5f5f5">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
+                                <StackPanel Orientation="Horizontal" Width="Auto" Height="Auto">
                                     <Image Source="{Binding ExecutableIcon}" />
                                     <TextBlock VerticalAlignment="Center" Text="{Binding ExecutableName}" />
                                     <StackPanel.InputBindings>
