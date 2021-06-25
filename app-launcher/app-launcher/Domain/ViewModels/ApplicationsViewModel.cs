@@ -41,7 +41,7 @@ namespace app_launcher.Domain
                 if (String.IsNullOrEmpty(value))
                     AppCollection.Filter = null;
                 else
-                    AppCollection.Filter = new Predicate<object>(o => (o as ApplicationViewModel).DisplayName.Contains(ApplicationsFilter));
+                    AppCollection.Filter = new Predicate<object>(o => (o as ApplicationViewModel).DisplayName.ToLower().Contains(ApplicationsFilter.ToLower()));
             }
         }
 
