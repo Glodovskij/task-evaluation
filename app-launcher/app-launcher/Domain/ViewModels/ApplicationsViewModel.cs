@@ -30,15 +30,23 @@ namespace app_launcher.Domain
         public ApplicationsViewModel()
         {
             AppModels = new ObservableCollection<ApplicationViewModel>();
-            ExtractAppDataFromRegistry(RegistryHive.CurrentUser);
-            ExtractAppDataFromRegistry(RegistryHive.LocalMachine);
-            Task.Run(() => FillAppModelsWithExecutables());
+            Task.Run(() => 
+            {
+                ExtractAppDataFromRegistry(RegistryHive.CurrentUser, RegistryView.Registry32);
+                ExtractAppDataFromRegistry(RegistryHive.LocalMachine, RegistryView.Registry32);
+                ExtractAppDataFromRegistry(RegistryHive.CurrentUser, RegistryView.Registry64);
+                ExtractAppDataFromRegistry(RegistryHive.LocalMachine, RegistryView.Registry64);
+                FillAppModelsWithExecutables();
+                });
         }
 
-        private void ExtractAppDataFromRegistry(RegistryHive registryHive)
+        private void ExtractAppDataFromRegistry(RegistryHive registryHive, RegistryView registryBit)
         {
+            string displayName, installLocation;
+            BitmapSource displayImage;
+
             string registry_key = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
-            using (Microsoft.Win32.RegistryKey key = RegistryKey.OpenBaseKey(registryHive, RegistryView.Registry64))
+            using (RegistryKey key = RegistryKey.OpenBaseKey(registryHive, registryBit))
             using (RegistryKey queryKey = key.OpenSubKey(registry_key))
             {
                 foreach (string subkey_name in queryKey.GetSubKeyNames())
@@ -53,12 +61,24 @@ namespace app_launcher.Domain
                                 {
                                     continue ;
                                 }
-                                AppModels.Add(new ApplicationViewModel
-                                {
-                                    DisplayImage = ExtractExecutableIcon(subkey.GetValue("DisplayIcon").ToString()),
-                                    DisplayName = subkey.GetValue("DisplayName").ToString(),
-                                    InstallLocation = subkey.GetValue("InstallLocation").ToString()
+                                displayName = subkey.GetValue("DisplayName").ToString();
+                                installLocation = subkey.GetValue("InstallLocation").ToString();
 
+                                App.Current.Dispatcher.Invoke(() =>
+                                {
+                                    ApplicationViewModel appVm = new ApplicationViewModel();
+                                    if (subkey.GetValue("DisplayIcon") == null)
+                                    {
+                                        appVm.DisplayImage = GetDefaultIcon();
+                                    }
+                                    else
+                                    {
+                                        appVm.DisplayImage = ExtractExecutableIcon(subkey.GetValue("DisplayIcon").ToString());
+                                    }
+                                    appVm.DisplayName = displayName;
+                                    appVm.InstallLocation = installLocation;
+
+                                AppModels.Add(appVm);
                                 });
                             }
                         }
@@ -85,11 +105,16 @@ namespace app_launcher.Domain
 
             catch
             {
-                return Imaging.CreateBitmapSourceFromHIcon(
+                return GetDefaultIcon();
+            }
+        }
+
+        private BitmapSource GetDefaultIcon()
+        {
+            return Imaging.CreateBitmapSourceFromHIcon(
                     Icon.ExtractAssociatedIcon(Process.GetCurrentProcess().MainModule.FileName).Handle,
                     new Int32Rect(0, 0, 32, 32),
                     BitmapSizeOptions.FromEmptyOptions());
-            }
         }
 
         private void FillAppModelsWithExecutables()
