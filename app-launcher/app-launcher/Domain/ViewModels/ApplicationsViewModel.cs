@@ -2,20 +2,51 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
+using System.Linq;
 
 namespace app_launcher.Domain
 {
     public class ApplicationsViewModel : BaseViewModel
     {
         public ObservableCollection<ApplicationViewModel> AppModels { get; set; }
+
+        private ICollectionView _filteredCollection;
+
+        public ICollectionView AppCollection
+        {
+            get { return _filteredCollection; }
+            set { _filteredCollection = value; OnPropertyChanged(); }
+        }
+
+        private string _filterProperty;
+
+        public string ApplicationsFilter
+        {
+            get { return _filterProperty; }
+            set 
+            { 
+                _filterProperty = value; 
+                OnPropertyChanged();
+
+                if (String.IsNullOrEmpty(value))
+                    AppCollection.Filter = null;
+                else
+                    AppCollection.Filter = new Predicate<object>(o => (o as ApplicationViewModel).DisplayName.Contains(ApplicationsFilter));
+            }
+        }
+
+
+
 
         private ICommand _launchAppCommand;
 
@@ -62,6 +93,12 @@ namespace app_launcher.Domain
                                     continue ;
                                 }
                                 displayName = subkey.GetValue("DisplayName").ToString();
+
+                                if (AppModels.Any(app => app.DisplayName == displayName))
+                                {
+                                    continue;
+                                }
+
                                 installLocation = subkey.GetValue("InstallLocation").ToString();
 
                                 App.Current.Dispatcher.Invoke(() =>
@@ -78,7 +115,8 @@ namespace app_launcher.Domain
                                     appVm.DisplayName = displayName;
                                     appVm.InstallLocation = installLocation;
 
-                                AppModels.Add(appVm);
+                                    AppModels.Add(appVm);
+                                    AppCollection = CollectionViewSource.GetDefaultView(AppModels);
                                 });
                             }
                         }
