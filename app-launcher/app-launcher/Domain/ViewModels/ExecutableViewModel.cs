@@ -2,7 +2,7 @@
 
 namespace app_launcher.Domain
 {
-    public class ExecutableModel : BaseModel
+    public class ExecutableViewModel : BaseViewModel
     {
         private string _name;
 

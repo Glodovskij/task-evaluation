@@ -3,7 +3,7 @@ using System.Windows.Media;
 
 namespace app_launcher.Domain
 {
-    public class ApplicationModel : BaseModel
+    public class ApplicationViewModel : BaseViewModel
     {
         private string _appPath;
 
@@ -29,11 +29,11 @@ namespace app_launcher.Domain
             set { _img = value; OnPropertyChanged(); }
         }
 
-        public ObservableCollection<ExecutableModel> ExecutableModels { get; set; }
+        public ObservableCollection<ExecutableViewModel> ExecutableModels { get; set; }
 
-        public ApplicationModel()
+        public ApplicationViewModel()
         {
-            ExecutableModels = new ObservableCollection<ExecutableModel>();
+            ExecutableModels = new ObservableCollection<ExecutableViewModel>();
         }
     }
 }
