@@ -14,14 +14,6 @@ namespace image_gallery
             InitializeComponent();
         }
 
-        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
-        {
-            base.OnRenderSizeChanged(sizeInfo);
-
-            int width = (int)((System.Windows.Controls.Panel)Application.Current.MainWindow.Content).ActualWidth;
-
-            (DataContext as PicturesSourceViewModel).ColumnAmount = width / 200;
-        }
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);

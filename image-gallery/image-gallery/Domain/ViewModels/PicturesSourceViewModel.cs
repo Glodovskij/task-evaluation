@@ -54,15 +54,6 @@ namespace image_gallery.Domain.ViewModels
             }
         }
 
-        private int _columnAmount;
-
-        public int ColumnAmount
-        {
-            get { return _columnAmount; }
-            set { _columnAmount = value; OnPropertyChanged(); }
-        }
-
-
         public PicturesSourceViewModel(PicturesContext pictureContext)
         {
             _dbContext = pictureContext;
