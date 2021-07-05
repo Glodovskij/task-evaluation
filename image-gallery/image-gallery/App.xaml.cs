@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using image_gallery.Domain.ViewModels;
 using System.Windows;
 
 namespace image_gallery
@@ -13,5 +8,13 @@ namespace image_gallery
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            Window window = new MainWindow();
+            window.DataContext = new PicturesSourceViewModel();
+            window.Show();
+
+            base.OnStartup(e);
+        }        
     }
 }
