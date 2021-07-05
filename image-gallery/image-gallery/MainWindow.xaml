@@ -11,14 +11,16 @@
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+        
         <ListBox 
             x:Name="PicturesListBox"
             Grid.Row="0"
             ItemsSource="{Binding PictureModels}"
-            SelectedItem="{Binding SelectedPicture}">
+            SelectedItem="{Binding SelectedPicture}"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <UniformGrid Columns="{Binding Path=DataContext.ColumnAmount, RelativeSource={RelativeSource AncestorType=Window}}"></UniformGrid>
+                    <WrapPanel/>
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
@@ -35,10 +37,15 @@
                             Source="{Binding BitmapImage}"
                             VerticalAlignment="Bottom">
                         </Image>
-                        <Label 
+
+                        <TextBlock
                             Grid.Row="1"
-                            Content="{Binding Name}"
-                            HorizontalContentAlignment="Center"/>
+                            MaxWidth="200" TextTrimming="WordEllipsis"
+                            Text="{Binding Name}"
+                            HorizontalAlignment="Center"
+                            />
+
+
                         <cc:RatingBar 
                             Grid.Row="2"
                             RatingValue="{Binding Rate, Mode=TwoWay}" />

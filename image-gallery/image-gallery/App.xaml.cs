@@ -1,5 +1,8 @@
-﻿using image_gallery.Domain.ViewModels;
+﻿using DAL.EF;
+using image_gallery.Domain.ViewModels;
 using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
+using image_gallery.Domain.Services;
 
 namespace image_gallery
 {
@@ -11,7 +14,7 @@ namespace image_gallery
         protected override void OnStartup(StartupEventArgs e)
         {
             Window window = new MainWindow();
-            window.DataContext = new PicturesSourceViewModel();
+            window.DataContext = new PicturesSourceViewModel(ServiceContainer.Services.GetService<PicturesContext>());
             window.Show();
 
             base.OnStartup(e);

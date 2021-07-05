@@ -5,13 +5,14 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Microsoft.Extensions.DependencyInjection;
 using System.Windows.Media.Imaging;
 
 namespace image_gallery.Domain.ViewModels
 {
     public class PicturesSourceViewModel : BaseViewModel
     {
+
+        private readonly PicturesContext _dbContext;
         public ObservableCollection<PictureViewModel> PictureModels { get; set; }
 
         private PictureViewModel _selectedPicture;
@@ -62,11 +63,11 @@ namespace image_gallery.Domain.ViewModels
         }
 
 
-        public PicturesSourceViewModel()
+        public PicturesSourceViewModel(PicturesContext pictureContext)
         {
-            PicturesContext dbContext = ServiceContainer.Services.GetService<PicturesContext>();
+            _dbContext = pictureContext;
 
-            var pics = dbContext.Pictures.Select(dbPic => new PictureViewModel()
+            var pics = _dbContext.Pictures.Select(dbPic => new PictureViewModel()
             {
                 BitmapImage = Base64Helper.Decode(dbPic.Content),
                 Id = dbPic.ID,
@@ -105,25 +106,24 @@ namespace image_gallery.Domain.ViewModels
         private void LoadImagesDialog(object obj)
         {
             using OpenFileDialog dialog = new();
-            dialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF)|*.BMP;*.JPG;*.GIF";
+            dialog.Filter = "Image Files(*.BMP;*.JPG;*.GIF;*.ICO;*.PNG;*.WDP;*.TIFF)|*.BMP;*.JPG;*.GIF;*.ICO;*.PNG;*.WDP;*.TIFF";
             dialog.Multiselect = true;
             DialogResult result = dialog.ShowDialog();
 
             if (result == DialogResult.OK)
             {
-                PicturesContext dbContext = ServiceContainer.Services.GetService<PicturesContext>();
                 foreach (string imagePath in dialog.FileNames)
                 {
                     string fileName = Path.GetFileName(imagePath);
 
-                    var newEntity = dbContext.Pictures.Add(new DAL.Entities.Picture
+                    var newEntity = _dbContext.Pictures.Add(new DAL.Entities.Picture
                     {
                         Content = Base64Helper.Encode(imagePath),
                         Name = fileName,
                         Rate = 0
                     }).Entity;
 
-                    dbContext.SaveChanges();
+                    _dbContext.SaveChanges();
 
                     PictureModels.Add(new PictureViewModel()
                     {
@@ -148,10 +148,8 @@ namespace image_gallery.Domain.ViewModels
                 return;
             }
 
-            PicturesContext dbContext = ServiceContainer.Services.GetService<PicturesContext>();
-
-            dbContext.Pictures.Remove(dbContext.Pictures.Find(SelectedPicture.Id));
-            dbContext.SaveChanges();
+            _dbContext.Pictures.Remove(_dbContext.Pictures.Find(SelectedPicture.Id));
+            _dbContext.SaveChanges();
 
             PictureModels.Remove(SelectedPicture);
         }
