@@ -1,6 +1,5 @@
 ﻿using DAL.EF;
 using image_gallery.Domain.Services;
-using image_gallery.Domain.ViewModels;
 using System.Windows.Media.Imaging;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,6 +7,7 @@ namespace image_gallery.Domain.ViewModels
 {
     public class PictureViewModel : BaseViewModel
     {
+        private readonly PicturesContext _dbContext;
         public int Id { get; set; }
         public BitmapImage BitmapImage { get; set; }
         public string Name { get; set; }
@@ -20,14 +20,18 @@ namespace image_gallery.Domain.ViewModels
             set 
             { 
                 _rate = value; OnPropertyChanged();
-                PicturesContext picContext = ServiceContainer.Services.GetService<PicturesContext>();
-                if (picContext.Pictures.Find(this.Id).Rate != value)
+                if (_dbContext.Pictures.Find(this.Id).Rate != value)
                 {
-                    picContext.Pictures.Find(this.Id).Rate = value;
-                    picContext.SaveChanges();
+                    _dbContext.Pictures.Find(this.Id).Rate = value;
+                    _dbContext.SaveChanges();
                 }
 
             }
+        }
+
+        public PictureViewModel()
+        {
+            _dbContext = ServiceContainer.Services.GetService<PicturesContext>();
         }
 
     }
