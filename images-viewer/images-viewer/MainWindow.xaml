@@ -1,0 +1,79 @@
+﻿<Window x:Class="images_viewer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:behaviours="clr-namespace:images_viewer.Domain.Behaviours"
+        mc:Ignorable="d"
+        xmlns:vms="clr-namespace:images_viewer.Domain.ViewModels"
+        xmlns:views="clr-namespace:images_viewer.Views"
+        xmlns:uc="clr-namespace:images_viewer.UserControls"
+        Title="MainWindow" WindowState="Maximized">
+
+    <DockPanel>
+        <ToolBar DockPanel.Dock="Top" Height="30" VerticalAlignment="Top">
+            <Button Width="Auto" Command="{Binding BackToGalleryCommand}">Back to gallery</Button>
+            <Separator />
+            <Button Width="Auto" Command="{Binding ViewPhotoCommand}">View image</Button>
+        </ToolBar>
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <DockPanel Grid.Row="0">
+                <TextBlock DockPanel.Dock="Top" Text="Folders"/>
+                <uc:TreeViewWithExpandedEvent
+                    x:Name="FolderTreeView"
+                    OnExpanded="{Binding ExpandTreeViewCommand}"
+                    ItemsSource="{Binding FolderTreeView}">
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding Nodes}">
+                            <Label Content="{Binding Header}" />
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+
+                    <TreeView.Resources>
+                        <Style TargetType="TreeViewItem">
+                            <Setter Property="Tag" Value="{Binding Path=Path}"/>
+                            <!--<Setter Property="behaviours:TreeViewBehaviours.ExpandingBehaviour" Value="{Binding Path=DataContext.ExpandTreeViewCommand, 
+                        RelativeSource={RelativeSource AncestorType=Window}}"/>-->
+                        </Style>
+                    </TreeView.Resources>
+
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="TreeViewItem">
+                            <Setter Property="Tag" Value="{Binding Path=Path}"/>
+                            <EventSetter Event="Expanded" Handler="TreeView_Expanded"/>
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+                </uc:TreeViewWithExpandedEvent>
+            </DockPanel>
+            
+            <DockPanel Grid.Row="1">
+                <TextBlock DockPanel.Dock="Top" Text="Preview"/>
+                <Image Source="{Binding SelectedPicture.Path}"/>
+            </DockPanel>
+
+            <ContentControl                 
+                Grid.Column="1"
+                Grid.RowSpan="2"
+                Content="{Binding CurrentViewModel}">
+
+                <ContentControl.Resources>
+                    <DataTemplate DataType="{x:Type vms:Gallery}">
+                        <views:GalleryView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type vms:PhotoViewer}">
+                        <views:PhotoViewerView DataContext="{Binding DataContext.CurrentViewModel, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                    </DataTemplate>
+                </ContentControl.Resources>
+            </ContentControl>
+        </Grid>
+    </DockPanel>
+</Window>

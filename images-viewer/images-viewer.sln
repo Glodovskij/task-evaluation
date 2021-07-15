@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31105.61
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "images-viewer", "images-viewer\images-viewer.csproj", "{4A8D6336-BB99-48E9-8D4B-BA59E5533D76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "images-viewer.DAL", "images-viewer.DAL\images-viewer.DAL.csproj", "{17FAC8D7-8455-4F29-A173-27534400A97E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4A8D6336-BB99-48E9-8D4B-BA59E5533D76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A8D6336-BB99-48E9-8D4B-BA59E5533D76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A8D6336-BB99-48E9-8D4B-BA59E5533D76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A8D6336-BB99-48E9-8D4B-BA59E5533D76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17FAC8D7-8455-4F29-A173-27534400A97E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17FAC8D7-8455-4F29-A173-27534400A97E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17FAC8D7-8455-4F29-A173-27534400A97E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17FAC8D7-8455-4F29-A173-27534400A97E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {426BB61D-E3E9-4249-8B13-5924992485A9}
+	EndGlobalSection
+EndGlobal
