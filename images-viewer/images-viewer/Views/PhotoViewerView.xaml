@@ -4,36 +4,47 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:userControls="clr-namespace:images_viewer.UserControls"
-             xmlns:dc="clr-namespace:images_viewer.DataConventers"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.Resources>
-        <dc:UriToBitmapConverter x:Key="uriToBitmapConverter" />
-    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="150"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
-            <Image Grid.Row="0" Source="{Binding SelectedPicture.Path }" />
+
+            <Image 
+                Grid.Row="0" 
+                Source="{Binding SelectedPicture.Path, Mode=TwoWay}" 
+                HorizontalAlignment="Center"/>
+
             <userControls:RatingBar 
                 Command="{Binding DataContext.StarClickedCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                Grid.Row="1"
+                Grid.Row="1" 
+                HorizontalAlignment="Center"
                 RatingValue="{Binding SelectedPicture.Rate, Mode=TwoWay}"/>
         </Grid>
+
+        <Button Grid.Column="0" Grid.Row="1" FontSize="30" Content="&lt;-" Command="{Binding LeftButtonCommand}"/>
         
         <ListView 
             SelectionChanged="photosListView_SelectionChanged"
             x:Name="photosListView"
             Grid.Row="1" 
-            ItemsSource="{Binding Pictures}"
+            Grid.Column="1"
+            ItemsSource="{Binding Pictures }"
             SelectedItem="{Binding SelectedPicture}"
             ScrollViewer.VerticalScrollBarVisibility="Disabled">
+            
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal"></StackPanel>
@@ -57,20 +68,12 @@
                             Grid.Row="1"
                             MaxWidth="100" TextTrimming="WordEllipsis"
                             Text="{Binding Name}"
-                            HorizontalAlignment="Center"
-                            />
-                        
-                        <!--<Grid.InputBindings>
-                            <MouseBinding 
-                                            MouseAction="LeftDoubleClick"
-                                            Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.OpenImageCommand}"
-                                            CommandParameter="{Binding }"/>
-
-                        </Grid.InputBindings>-->
-
+                            HorizontalAlignment="Center"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+
+        <Button Grid.Column="2" Grid.Row="1" FontSize="30" Content="-&gt;" Command="{Binding RightButtonCommand }" />
     </Grid>
 </UserControl>

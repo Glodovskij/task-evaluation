@@ -1,0 +1,79 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:userControls="clr-namespace:images_viewer.UserControls"
+                    xmlns:templateSelector="clr-namespace:images_viewer.Views">
+    <DataTemplate x:Key="PictureTemplate">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Image 
+                Grid.Row="0"
+                Width="200"
+                Source="{Binding Path=Path, Converter={StaticResource uriToBitmapConverter}}"
+                VerticalAlignment="Bottom">
+            </Image>
+
+            <TextBlock
+                Grid.Row="1"
+                MaxWidth="200" TextTrimming="WordEllipsis"
+                Text="{Binding Name}"
+                HorizontalAlignment="Center"/>
+
+            <userControls:RatingBar 
+                IsEnabled="False"
+                Grid.Row="2"
+                RatingValue="{Binding Rate, Mode=TwoWay}" />
+
+            <Grid.InputBindings>
+                <MouseBinding 
+                    MouseAction="LeftDoubleClick"
+                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.OpenImageCommand}"
+                    CommandParameter="{Binding }"/>
+
+            </Grid.InputBindings>
+
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="FolderTemplate">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Image 
+                Grid.Row="0"
+                Width="200"
+                VerticalAlignment="Bottom">
+                <Image.Source>
+                    <DrawingImage>
+                        <DrawingImage.Drawing>
+                            <GeometryDrawing Brush="#FDD835" Geometry="{StaticResource FolderImageGeomerty}" />
+                            </DrawingImage.Drawing>
+                        </DrawingImage>
+                </Image.Source>
+            </Image>
+
+
+                <TextBlock
+                Grid.Row="1"
+                MaxWidth="200" TextTrimming="WordEllipsis"
+                Text="{Binding Name}"
+                HorizontalAlignment="Center"/>
+
+            <Grid.InputBindings>
+                <MouseBinding 
+                    MouseAction="LeftDoubleClick"
+                    Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.OpenImageCommand}"
+                    CommandParameter="{Binding }"/>
+
+            </Grid.InputBindings>
+
+        </Grid>
+    </DataTemplate>
+    <templateSelector:GalleryObjectTemplateSelector x:Key="GalleryObjectTemplateSelector"/>
+    
+</ResourceDictionary>

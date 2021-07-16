@@ -16,10 +16,4 @@
     <ProjectReference Include="..\images-viewer.DAL\images-viewer.DAL.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="folder.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

@@ -1,12 +1,7 @@
 ﻿namespace images_viewer.Domain.ViewModels
 {
-    public class Picture : Base
+    public class Picture : GalleryObject
     {
-        public string Name { get; set; }
-        public string Path { get; set; }
-
-        public string FolderPath { get; set; }
-
         private int _rate;
         public int Rate
         {

@@ -18,6 +18,7 @@ namespace images_viewer.Views
         private void photosListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Keyboard.Focus(sender as IInputElement);
+            this.photosListView.ScrollIntoView(sender);
         }
     }
 }

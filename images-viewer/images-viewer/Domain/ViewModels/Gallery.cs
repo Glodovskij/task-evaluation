@@ -1,27 +1,32 @@
 ﻿using images_viewer.DAL.Interfaces;
-using images_viewer.Domain.Models;
-using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace images_viewer.Domain.ViewModels
 {
     public class Gallery : Base
     {
-        public ObservableCollection<Picture> Pictures { get; private set; }
+        public ObservableCollection<GalleryObject> GalleryObjects { get; private set; }
         public ObservableCollection<TreeViewNode> FolderTreeView { get; set; }
 
         private readonly IUnitOfWork _unitOfWork;
 
-        private Picture _selectedPicture;
+        private GalleryObject _selectedPicture;
 
-        public Picture SelectedPicture
+        public GalleryObject SelectedPicture
         {
             get { return _selectedPicture; }
-            set { _selectedPicture = value; OnPropertyChanged(); }
+            set
+            {
+                if (value is Picture)
+                {
+                    _selectedPicture = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         private TreeViewNode _treeViewItem;
@@ -38,14 +43,6 @@ namespace images_viewer.Domain.ViewModels
         {
             get { return _currentVm; }
             set { _currentVm = value; OnPropertyChanged(); }
-        }
-
-
-        private RelayCommand _expandTreeViewCommand;
-
-        public RelayCommand ExpandTreeViewCommand
-        {
-            get { return _expandTreeViewCommand ?? (_expandTreeViewCommand = new(ExpandTreeViewCommandHandler)); }
         }
 
         private RelayCommand _openImageCommand;
@@ -74,7 +71,7 @@ namespace images_viewer.Domain.ViewModels
         public Gallery(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            Pictures = new();
+            GalleryObjects = new();
 
             FolderTreeView = new();
             FolderTreeView.Add(new TreeViewNode()
@@ -85,128 +82,100 @@ namespace images_viewer.Domain.ViewModels
 
             foreach (var folder in Directory.GetLogicalDrives())
             {
-                FolderTreeView.FirstOrDefault().Nodes.Add(new() { Header = folder, Path = folder });
+                FolderTreeView.FirstOrDefault().Nodes.Add(new() { Header = folder, Path = folder, Nodes = new ObservableCollection<TreeViewNode>() { null } });
             }
+
+            TreeViewNode.Expanded += TreeViewNode_Expanded;
 
             CurrentViewModel = this;
         }
 
-        private void ExpandTreeViewCommandHandler(object obj)
+        private void TreeViewNode_Expanded(string path)
         {
-            TreeViewItem treeViewItem = obj as TreeViewItem;
-            if(treeViewItem.Tag == null)
-            {
-                return;
-            }
-            try
-            {
-                LoadImagesFromFolder(treeViewItem.Tag.ToString());
-
-                TreeViewNode expandedNode = TreeViewNode.GetNode(FolderTreeView.FirstOrDefault(), treeViewItem.Tag.ToString());
-
-                foreach (var folder in Directory.GetDirectories(treeViewItem.Tag.ToString()))
-                {
-                    TreeViewNode folderNode = new TreeViewNode()
-                    {
-                        Header = folder.Substring(folder.LastIndexOf("\\") + 1),
-                        Path = folder
-                    };
-
-                    expandedNode.Nodes.Add(folderNode);
-                }
-            }
-            catch (UnauthorizedAccessException)
-            {
-                //Часть папок невозможно открыть из-за безопасности
-            }
+            LoadImagesFromFolder(path);
         }
 
         private void LoadImagesFromFolder(string path)
         {
-            Pictures.Clear();
-            foreach (var folder in Directory.GetDirectories(path))
+            GalleryObjects.Clear();
+            Task.Run(() =>
             {
-                string fileName = folder;
-                Pictures.Add(new Picture()
+                foreach (var folder in Directory.GetDirectories(path))
                 {
-                    FolderPath = folder,
-                    Path = AppDomain.CurrentDomain.BaseDirectory + "//folder.png",
-                    Name = folder.Substring(folder.LastIndexOf("\\") + 1),
-                    Rate = 0
-                });
-            }
-            var filesQuery = Directory.EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly)
-            .Where(s => s.EndsWith(".bmp") || s.EndsWith(".jpg") || s.EndsWith(".gif") || s.EndsWith(".ico")
-            || s.EndsWith(".png") || s.EndsWith(".wdp") || s.EndsWith(".tiff"));
-            foreach (var file in filesQuery)
-            {
-                string fileName = Path.GetFileName(file);
-                Picture pictureFromFolder = new Picture()
-                {
-                    Path = file,
-                    Name = fileName,
-                };
-
-                try
-                {
-                    pictureFromFolder.Rate = _unitOfWork.GetRepository<DAL.Entities.Picture>().Get(pic => pic.DiscPath == file).First().Rate;
-                }
-                catch
-                {
-                    pictureFromFolder.Rate = 0;
+                    string fileName = folder;
+                    App.Current.Dispatcher.Invoke(() =>
+                    GalleryObjects.Add(new Folder()
+                    {
+                        Path = folder,
+                        Name = folder.Substring(folder.LastIndexOf("\\") + 1),
+                    }));
                 }
 
-                Pictures.Add(pictureFromFolder);
-            }
+                var filesQuery = Directory.EnumerateFiles(path, "*.*", SearchOption.TopDirectoryOnly)
+                .Where(s => s.EndsWith(".bmp") || s.EndsWith(".jpg") || s.EndsWith(".gif") || s.EndsWith(".ico")
+                || s.EndsWith(".png") || s.EndsWith(".wdp") || s.EndsWith(".tiff"));
+
+                foreach (string file in filesQuery)
+                {
+                    Picture pictureFromFolder = new Picture()
+                    {
+                        Path = file,
+                        Name = Path.GetFileName(file),
+                    };
+
+                    try
+                    {
+                        pictureFromFolder.Rate = _unitOfWork.GetRepository<DAL.Entities.Picture>().Get(pic => pic.DiscPath == file).First().Rate;
+                    }
+                    catch
+                    {
+                        pictureFromFolder.Rate = 0;
+                    }
+
+                    App.Current.Dispatcher.Invoke(() => GalleryObjects.Add(pictureFromFolder));
+                }
+            });
         }
 
         private void OpenImageCommandHandler(object obj)
         {
-            string pngFolderPath = AppDomain.CurrentDomain.BaseDirectory + "//folder.png";
-            Picture chosenPic = obj as Picture;
-            if (chosenPic.Path == AppDomain.CurrentDomain.BaseDirectory + "//folder.png")
+            if (obj is Folder)
             {
-                try
-                {
-                    LoadImagesFromFolder((obj as Picture).FolderPath);
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    //Часть папок невозможно открыть из-за безопасности
-                }
+                LoadImagesFromFolder((obj as Folder).Path);
             }
             else
             {
-                var photoViewer = new PhotoViewer(_unitOfWork)
-                {
-                    Pictures = new ObservableCollection<Picture>(this.Pictures.Where(pic => pic.Path.EndsWith(pngFolderPath) == false).ToList()),
-                    SelectedPicture = this.SelectedPicture
-                };
-                CurrentViewModel = photoViewer;
+                InitializePhotoViewerVIewModel();
             }
         }
 
         private void BackToGalleryCommandHandler(object obj)
         {
             CurrentViewModel = this;
+            SelectedPicture = null;
         }
 
         private void ViewPhotoCommandHandler(object obj)
         {
-            string pngFolderPath = AppDomain.CurrentDomain.BaseDirectory + "//folder.png";
-            if (SelectedPicture == null || SelectedPicture.Path == pngFolderPath || !Pictures.Contains(SelectedPicture))
+            if (SelectedPicture == null || !GalleryObjects.Contains(SelectedPicture))
             {
                 MessageBox.Show("You need to pick image to view it");
             }
             else
             {
-                var photoViewer = new PhotoViewer(_unitOfWork)
-                {
-                    Pictures = new ObservableCollection<Picture>(this.Pictures.Where(pic => pic.Path.EndsWith(pngFolderPath) == false).ToList()),
-                    SelectedPicture = this.SelectedPicture
-                };
-                CurrentViewModel = photoViewer;
+                InitializePhotoViewerVIewModel();
             }
+        }
+
+        private void InitializePhotoViewerVIewModel()
+        {
+            PhotoViewer photoViewer = new PhotoViewer(_unitOfWork)
+            {
+                Pictures = new ObservableCollection<GalleryObject>(GalleryObjects.Where(pic => pic is Picture).ToList()),
+                SelectedPicture = this.SelectedPicture
+            };
+
+            CurrentViewModel = photoViewer;
         }
     }
 }

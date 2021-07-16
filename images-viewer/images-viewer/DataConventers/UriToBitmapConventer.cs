@@ -14,10 +14,18 @@ namespace images_viewer.DataConventers
                 CacheOption = BitmapCacheOption.OnDemand,
                 CreateOptions = BitmapCreateOptions.DelayCreation
             };
+            try
+            {
             bmp.BeginInit();
             bmp.DecodePixelWidth = 160;
             bmp.UriSource = new Uri((string)value);
             bmp.EndInit();
+
+            }
+            catch
+            {
+                return null;
+            }
             return bmp;
         }
 

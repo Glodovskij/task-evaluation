@@ -3,11 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:behaviours="clr-namespace:images_viewer.Domain.Behaviours"
         mc:Ignorable="d"
         xmlns:vms="clr-namespace:images_viewer.Domain.ViewModels"
         xmlns:views="clr-namespace:images_viewer.Views"
-        xmlns:uc="clr-namespace:images_viewer.UserControls"
         Title="MainWindow" WindowState="Maximized">
 
     <DockPanel>
@@ -27,10 +25,14 @@
             </Grid.RowDefinitions>
 
             <DockPanel Grid.Row="0">
-                <TextBlock DockPanel.Dock="Top" Text="Folders"/>
-                <uc:TreeViewWithExpandedEvent
+                <TextBlock 
+                    DockPanel.Dock="Top" 
+                    Text="Folders"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"/>
+                
+                <TreeView
                     x:Name="FolderTreeView"
-                    OnExpanded="{Binding ExpandTreeViewCommand}"
                     ItemsSource="{Binding FolderTreeView}">
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate ItemsSource="{Binding Nodes}">
@@ -38,27 +40,34 @@
                         </HierarchicalDataTemplate>
                     </TreeView.ItemTemplate>
 
-                    <TreeView.Resources>
-                        <Style TargetType="TreeViewItem">
-                            <Setter Property="Tag" Value="{Binding Path=Path}"/>
-                            <!--<Setter Property="behaviours:TreeViewBehaviours.ExpandingBehaviour" Value="{Binding Path=DataContext.ExpandTreeViewCommand, 
-                        RelativeSource={RelativeSource AncestorType=Window}}"/>-->
-                        </Style>
-                    </TreeView.Resources>
-
                     <TreeView.ItemContainerStyle>
                         <Style TargetType="TreeViewItem">
                             <Setter Property="Tag" Value="{Binding Path=Path}"/>
-                            <EventSetter Event="Expanded" Handler="TreeView_Expanded"/>
+                            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
                         </Style>
                     </TreeView.ItemContainerStyle>
-                </uc:TreeViewWithExpandedEvent>
+                </TreeView>
+                
             </DockPanel>
             
             <DockPanel Grid.Row="1">
-                <TextBlock DockPanel.Dock="Top" Text="Preview"/>
+                <TextBlock 
+                    DockPanel.Dock="Top" 
+                    Text="Preview"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"/>
                 <Image Source="{Binding SelectedPicture.Path}"/>
             </DockPanel>
+
+            <GridSplitter 
+                Grid.Column="0"
+                Grid.RowSpan="2"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Stretch"
+                Background="Black" 
+                ShowsPreview="False"
+                Width="2"
+              />
 
             <ContentControl                 
                 Grid.Column="1"

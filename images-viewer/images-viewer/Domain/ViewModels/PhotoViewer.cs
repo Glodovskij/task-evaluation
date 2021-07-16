@@ -6,11 +6,11 @@ namespace images_viewer.Domain.ViewModels
 {
     public class PhotoViewer : Base
     {
-        public ObservableCollection<Picture> Pictures { get; set; }
+        public ObservableCollection<GalleryObject> Pictures { get; set; }
 
-        private Picture _selectedPicture;
+        private GalleryObject _selectedPicture;
 
-        public Picture SelectedPicture
+        public GalleryObject SelectedPicture
         {
             get { return _selectedPicture; }
             set { _selectedPicture = value; OnPropertyChanged(); }
@@ -23,6 +23,20 @@ namespace images_viewer.Domain.ViewModels
             get { return _starClicked ?? (_starClicked = new RelayCommand(StarClickedCommandHandler)); }
         }
 
+        private RelayCommand _leftButtonCommand;
+
+        public RelayCommand LeftButtonCommand
+        {
+            get { return _leftButtonCommand ?? (_leftButtonCommand = new RelayCommand(LeftButtonCommandHandler)); }
+        }
+
+        private RelayCommand _rightButtonCommand;
+
+        public RelayCommand RightButtonCommand
+        {
+            get { return _rightButtonCommand ?? (_rightButtonCommand = new RelayCommand(RightButtonCommandHandler)); }
+        }
+
 
         private IUnitOfWork _unitOfWork;
 
@@ -30,6 +44,29 @@ namespace images_viewer.Domain.ViewModels
         {
             _unitOfWork = unitOfWork;
             Pictures = new();
+        }
+
+        private void LeftButtonCommandHandler(object obj)
+        {
+            if (Pictures.IndexOf(SelectedPicture) - 1 < 0)
+            {
+                SelectedPicture = Pictures.Last();
+            }
+            else
+            {
+                SelectedPicture = Pictures[Pictures.IndexOf(SelectedPicture) - 1];
+            }
+        }
+        private void RightButtonCommandHandler(object obj)
+        {
+            if (Pictures.IndexOf(SelectedPicture) + 1 > Pictures.Count - 1)
+            {
+                SelectedPicture = Pictures.First();
+            }
+            else
+            {
+                SelectedPicture = Pictures[Pictures.IndexOf(SelectedPicture) + 1];
+            }
         }
 
         private void StarClickedCommandHandler(object obj)
