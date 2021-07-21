@@ -1,0 +1,104 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:custom_controls.Controls">
+
+
+    <Style TargetType="{x:Type local:CardView}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:CardView}">
+                    <Grid>
+                        <Border Background="White"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=UniformCornerRadius}">
+                            <Border.Effect>
+                                <DropShadowEffect ShadowDepth="2" BlurRadius="3"/>
+                            </Border.Effect>
+                        </Border>
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=UniformCornerRadius}"
+                                >
+                            <Grid Width="{TemplateBinding Width}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <ContentPresenter Grid.Row="0" Content="{TemplateBinding CardImage}"/>
+                                <ContentPresenter Grid.Row="1" Margin="10" Content="{TemplateBinding CardHeader}"/>
+                                <ContentPresenter Grid.Row="2" Content="{TemplateBinding CardBody}"/>
+                                <ContentPresenter Grid.Row="3" Margin="10" Content="{TemplateBinding CardFooter}"/>
+                            </Grid>
+                            <!--<ContentPresenter ContentSource="Image" />-->
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+                
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="LightGray"/>
+    </Style>
+
+
+    <Style TargetType="{x:Type local:Toggler}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:Toggler}">
+                    <Grid Width="40" Height="20" x:Name="PART_ToggleButtonView">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="ToggleStates">
+                                <VisualState x:Name="Zero">
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="PART_TogglerBackgroundFill"
+                                                        Storyboard.TargetProperty="Color"
+                                                        To="LightGray"
+                                                        SpeedRatio="3">
+                                        </ColorAnimation>
+
+                                        <DoubleAnimation Storyboard.TargetName="PART_TogglerXAxis"
+                                                            Storyboard.TargetProperty="X"
+                                                            To="0"
+                                                            SpeedRatio="3"/>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="One">
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="PART_TogglerBackgroundFill"
+                                                        Storyboard.TargetProperty="Color"
+                                                        To="LightGreen"
+                                                        SpeedRatio="3">
+                                        </ColorAnimation>
+
+                                        <DoubleAnimation Storyboard.TargetName="PART_TogglerXAxis"
+                                                            Storyboard.TargetProperty="X"
+                                                            To="20"
+                                                            SpeedRatio="3"/>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Border x:Name="PART_TogglerBackground" CornerRadius="10" Width="40" Height="20">
+                            <Border.Background>
+                                <SolidColorBrush x:Name="PART_TogglerBackgroundFill" Color="LightGray"></SolidColorBrush>
+                            </Border.Background>
+                        </Border>
+
+                        <Border x:Name="PART_Toggler" CornerRadius="10" Width="16" Height="16" Background="White" Margin="2" HorizontalAlignment="Left">
+                            <Border.RenderTransform>
+                                <TranslateTransform x:Name="PART_TogglerXAxis" X="0"></TranslateTransform>
+                            </Border.RenderTransform>
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
