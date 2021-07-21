@@ -12,6 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\custom-controls.controls\custom-controls.controls.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Resources\alex.jpg" />
   </ItemGroup>
 

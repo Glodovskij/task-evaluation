@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace custom_controls.Controls
+namespace custom_controls.controls
 {
     public class CardView : Control
     {

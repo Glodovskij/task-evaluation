@@ -1,7 +1,7 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:custom_controls.Controls">
+    xmlns:local="clr-namespace:custom_controls.controls">
 
 
     <Style TargetType="{x:Type local:CardView}">
@@ -38,7 +38,7 @@
                         </Border>
                     </Grid>
                 </ControlTemplate>
-                
+
             </Setter.Value>
         </Setter>
         <Setter Property="BorderThickness" Value="1"/>
@@ -61,10 +61,10 @@
                                                         SpeedRatio="3">
                                         </ColorAnimation>
 
-                                        <DoubleAnimation Storyboard.TargetName="PART_TogglerXAxis"
-                                                            Storyboard.TargetProperty="X"
-                                                            To="0"
-                                                            SpeedRatio="3"/>
+                                        <!--<DoubleAnimation Storyboard.TargetName="PART_Toggler"
+                                                         Storyboard.TargetProperty="(Canvas.Left)"
+                                                         To="0"
+                                                         SpeedRatio="3"/>-->
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="One">
@@ -75,10 +75,10 @@
                                                         SpeedRatio="3">
                                         </ColorAnimation>
 
-                                        <DoubleAnimation Storyboard.TargetName="PART_TogglerXAxis"
-                                                            Storyboard.TargetProperty="X"
-                                                            To="20"
-                                                            SpeedRatio="3"/>
+                                        <!--<DoubleAnimation Storyboard.TargetName="PART_Toggler"
+                                                         Storyboard.TargetProperty="(Canvas.Left)"
+                                                         To="20"
+                                                         SpeedRatio="3"/>-->
                                     </Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
@@ -86,15 +86,20 @@
 
                         <Border x:Name="PART_TogglerBackground" CornerRadius="10" Width="40" Height="20">
                             <Border.Background>
-                                <SolidColorBrush x:Name="PART_TogglerBackgroundFill" Color="LightGray"></SolidColorBrush>
+                                <SolidColorBrush x:Name="PART_TogglerBackgroundFill" Color="LightGray" />
                             </Border.Background>
+                            <Canvas x:Name="PART_TogglerCanvas" Background="Transparent">
+                                <Thumb x:Name="PART_Toggler" Cursor="Hand">
+                                    <Thumb.Template>
+                                        <ControlTemplate>
+                                            <Border CornerRadius="10" Width="16" Height="16" Background="White" Margin="2" HorizontalAlignment="Left"/>
+                                        </ControlTemplate>    
+                                    </Thumb.Template>
+                                    
+                                </Thumb>
+                            </Canvas>
                         </Border>
 
-                        <Border x:Name="PART_Toggler" CornerRadius="10" Width="16" Height="16" Background="White" Margin="2" HorizontalAlignment="Left">
-                            <Border.RenderTransform>
-                                <TranslateTransform x:Name="PART_TogglerXAxis" X="0"></TranslateTransform>
-                            </Border.RenderTransform>
-                        </Border>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
