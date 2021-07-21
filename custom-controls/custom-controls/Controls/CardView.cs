@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace custom_controls.Controls
 {
@@ -19,8 +7,8 @@ namespace custom_controls.Controls
     {
         public double UniformCornerRadius
         {
-            get => (double)GetValue(UniformCornerRadiusProperty);
-            set => SetValue(UniformCornerRadiusProperty, value);
+            get { return (double)GetValue(UniformCornerRadiusProperty); }
+            set { SetValue(UniformCornerRadiusProperty, value); }
         }
         public static readonly DependencyProperty UniformCornerRadiusProperty
             = DependencyProperty.Register(nameof(UniformCornerRadius), typeof(double), typeof(CardView),
@@ -32,7 +20,6 @@ namespace custom_controls.Controls
             set { SetValue(CardImageProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for CardImage.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CardImageProperty =
             DependencyProperty.Register("CardImage", typeof(object), typeof(CardView), new PropertyMetadata(null));
 
@@ -42,7 +29,6 @@ namespace custom_controls.Controls
             set { SetValue(CardBodyProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for CardBody.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CardBodyProperty =
             DependencyProperty.Register("CardBody", typeof(object), typeof(CardView), new PropertyMetadata(null));
 
@@ -52,7 +38,6 @@ namespace custom_controls.Controls
             set { SetValue(CardHeaderProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for CardHeader.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CardHeaderProperty =
             DependencyProperty.Register("CardHeader", typeof(string), typeof(CardView), new PropertyMetadata(null));
 
@@ -62,11 +47,8 @@ namespace custom_controls.Controls
             set { SetValue(CardFooterProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for CardFooter.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CardFooterProperty =
             DependencyProperty.Register("CardFooter", typeof(string), typeof(CardView), new PropertyMetadata(null));
-
-
 
 
         static CardView()

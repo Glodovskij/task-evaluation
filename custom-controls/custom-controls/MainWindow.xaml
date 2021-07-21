@@ -7,25 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <WrapPanel>
-        <!--<local:CardView Width="200" Margin="10" Background="White">
-            --><!--<Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="150"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-
-                <Image Grid.Row="0" Source="pack://application:,,,/resources/knight.jpg" VerticalAlignment="Top"/>
-                <Ellipse Fill="PowderBlue" Width="30" Height="30" Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0 0 10 0"></Ellipse>
-
-                <TextBlock Grid.Row="1" Text="Нержавейка не ржавеет!" FontSize="14" FontWeight="Light" FontStyle="Italic" Padding="10 0 0 0"></TextBlock>
-
-                <TextBlock Grid.Row="2" Text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." Padding="10" TextWrapping="Wrap"></TextBlock>
-
-            </Grid>--><!--
-        </local:CardView>-->
- 
-        <local:CardView Width="200"> 
+        <local:CardView Width="200" Margin="20"> 
             <local:CardView.CardImage>
                 <Image Grid.Row="0" Source="pack://application:,,,/resources/alex.jpg" VerticalAlignment="Top"/>
             </local:CardView.CardImage>

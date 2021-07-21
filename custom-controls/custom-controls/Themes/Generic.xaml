@@ -35,7 +35,6 @@
                                 <ContentPresenter Grid.Row="2" Content="{TemplateBinding CardBody}"/>
                                 <ContentPresenter Grid.Row="3" Margin="10" Content="{TemplateBinding CardFooter}"/>
                             </Grid>
-                            <!--<ContentPresenter ContentSource="Image" />-->
                         </Border>
                     </Grid>
                 </ControlTemplate>
