@@ -3,7 +3,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:custom_controls.controls">
 
-
     <Style TargetType="{x:Type local:CardView}">
         <Setter Property="Template">
             <Setter.Value>
@@ -47,10 +46,18 @@
 
 
     <Style TargetType="{x:Type local:Toggler}">
+        <Style.Resources>
+            <local:BooleanToOnOffConverter x:Key="BooleanToOnOffConverter" />
+        </Style.Resources>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:Toggler}">
-                    <Grid Width="40" Height="20" x:Name="PART_ToggleButtonView">
+                    <Grid Height="20" x:Name="PART_ToggleButtonView">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="ToggleStates">
                                 <VisualState x:Name="Zero">
@@ -60,11 +67,6 @@
                                                         To="LightGray"
                                                         SpeedRatio="3">
                                         </ColorAnimation>
-
-                                        <!--<DoubleAnimation Storyboard.TargetName="PART_Toggler"
-                                                         Storyboard.TargetProperty="(Canvas.Left)"
-                                                         To="0"
-                                                         SpeedRatio="3"/>-->
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="One">
@@ -74,17 +76,12 @@
                                                         To="LightGreen"
                                                         SpeedRatio="3">
                                         </ColorAnimation>
-
-                                        <!--<DoubleAnimation Storyboard.TargetName="PART_Toggler"
-                                                         Storyboard.TargetProperty="(Canvas.Left)"
-                                                         To="20"
-                                                         SpeedRatio="3"/>-->
                                     </Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
 
-                        <Border x:Name="PART_TogglerBackground" CornerRadius="10" Width="40" Height="20">
+                        <Border Grid.Column="0" x:Name="PART_TogglerBackground" CornerRadius="10" Width="40" Height="20">
                             <Border.Background>
                                 <SolidColorBrush x:Name="PART_TogglerBackgroundFill" Color="LightGray" />
                             </Border.Background>
@@ -99,7 +96,10 @@
                                 </Thumb>
                             </Canvas>
                         </Border>
-
+                        <TextBlock 
+                            Grid.Column="1"
+                            Text="{TemplateBinding ToggleState, Converter={StaticResource ResourceKey=BooleanToOnOffConverter}}" 
+                            Padding="5,0,0,0" VerticalAlignment="Center"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

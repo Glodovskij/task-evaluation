@@ -8,6 +8,9 @@ namespace custom_controls.controls
 {
     public class Toggler : Control
     {
+        private double FalseXAxisCanvasCoordinate;
+        private double TrueXAxisCanvasCoordinate;
+
         public bool ToggleState
         {
             get { return (bool)GetValue(ToggleStateProperty); }
@@ -22,6 +25,7 @@ namespace custom_controls.controls
             DefaultStyleKeyProperty.OverrideMetadata(typeof(Toggler), new FrameworkPropertyMetadata(typeof(Toggler)));
         }
 
+
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -33,6 +37,20 @@ namespace custom_controls.controls
             thumb.DragCompleted += Thumb_DragCompleted;
 
             grid.MouseLeftButtonDown += Grid_MouseLeftButtonDown;
+
+            Canvas canvas = GetTemplateChild("PART_TogglerCanvas") as Canvas;
+
+            canvas.SizeChanged += Canvas_SizeChanged; 
+        }
+
+        private void Canvas_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            Canvas canvas = sender as Canvas;
+            Thumb thumb = GetTemplateChild("PART_Toggler") as Thumb;
+
+            FalseXAxisCanvasCoordinate = 0;
+            TrueXAxisCanvasCoordinate = canvas.ActualWidth - thumb.ActualWidth;
+
         }
 
         private void Thumb_DragCompleted(object sender, DragCompletedEventArgs e)
@@ -40,15 +58,15 @@ namespace custom_controls.controls
             var thumb = sender as Thumb;
             var offset = VisualTreeHelper.GetOffset(thumb);
 
-            if(offset.X != 20 && offset.X != 0)
+            if(offset.X != TrueXAxisCanvasCoordinate && offset.X != FalseXAxisCanvasCoordinate)
             {
                 if(ToggleState)
                 {
-                    Canvas.SetLeft(thumb, 20);
+                    Canvas.SetLeft(thumb, TrueXAxisCanvasCoordinate);
                 }
                 else
                 {
-                    Canvas.SetLeft(thumb, 0);
+                    Canvas.SetLeft(thumb, FalseXAxisCanvasCoordinate);
                 }
             }
            
@@ -60,16 +78,16 @@ namespace custom_controls.controls
             var offset = VisualTreeHelper.GetOffset(thumb);
 
             var left = offset.X + e.HorizontalChange;
-            if (left <= 20 && left >= 0)
+            if (left <= TrueXAxisCanvasCoordinate && left >= FalseXAxisCanvasCoordinate)
             {
                 Canvas.SetLeft(thumb, left);
             }
-            if (left == 0)
+            if (left == FalseXAxisCanvasCoordinate)
             {
                 ToggleState = false;
                 VisualStateManager.GoToState(this, "Zero", false);
             }
-            else if (left == 20)
+            else if (left == TrueXAxisCanvasCoordinate)
             {
                 ToggleState = true;
                 VisualStateManager.GoToState(this, "One", false);
@@ -83,13 +101,13 @@ namespace custom_controls.controls
             {
                 VisualStateManager.GoToState(this, "One", false);
                 Thumb thumb = GetTemplateChild("PART_Toggler") as Thumb;
-                Canvas.SetLeft(thumb, 20);
+                Canvas.SetLeft(thumb, TrueXAxisCanvasCoordinate);
             }
             else
             {
                 VisualStateManager.GoToState(this, "Zero", false);
                 Thumb thumb = GetTemplateChild("PART_Toggler") as Thumb;
-                Canvas.SetLeft(thumb, 0);
+                Canvas.SetLeft(thumb, FalseXAxisCanvasCoordinate);
             }
         }
     }
