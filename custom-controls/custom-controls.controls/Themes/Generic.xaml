@@ -46,9 +46,6 @@
 
 
     <Style TargetType="{x:Type local:Toggler}">
-        <Style.Resources>
-            <local:BooleanToOnOffConverter x:Key="BooleanToOnOffConverter" />
-        </Style.Resources>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:Toggler}">
@@ -96,10 +93,7 @@
                                 </Thumb>
                             </Canvas>
                         </Border>
-                        <TextBlock 
-                            Grid.Column="1"
-                            Text="{TemplateBinding ToggleState, Converter={StaticResource ResourceKey=BooleanToOnOffConverter}}" 
-                            Padding="5,0,0,0" VerticalAlignment="Center"/>
+                        <ContentPresenter Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Center" x:Name="PART_ToggleStateContentPresenter" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

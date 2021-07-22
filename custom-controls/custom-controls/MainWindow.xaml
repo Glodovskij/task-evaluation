@@ -22,7 +22,11 @@
             </local:CardView.CardFooter>
         </local:CardView>
 
-        <local:Toggler Margin="20"></local:Toggler>
+        <local:Toggler 
+            Margin="20"
+            OffState="Off"
+            OnState="On"
+            />
 
     </WrapPanel>
 </Window>
