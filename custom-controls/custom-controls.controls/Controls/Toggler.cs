@@ -10,7 +10,6 @@ namespace custom_controls.controls
     {
         private double FalseXAxisCanvasCoordinate;
         private double TrueXAxisCanvasCoordinate;
-        private ContentPresenter TogglerStateContentPresenter;
 
         public bool ToggleState
         {
@@ -62,10 +61,6 @@ namespace custom_controls.controls
             Canvas canvas = GetTemplateChild("PART_TogglerCanvas") as Canvas;
 
             canvas.SizeChanged += Canvas_SizeChanged;
-
-            TogglerStateContentPresenter = GetTemplateChild("PART_ToggleStateContentPresenter") as ContentPresenter;
-
-            TogglerStateContentPresenter.Content = OffState;
         }
 
         private void Canvas_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -111,13 +106,12 @@ namespace custom_controls.controls
             {
                 ToggleState = false;
                 VisualStateManager.GoToState(this, "Zero", false);
-                TogglerStateContentPresenter.Content = OffState;
+
             }
             else if (left == TrueXAxisCanvasCoordinate)
             {
                 ToggleState = true;
                 VisualStateManager.GoToState(this, "One", false);
-                TogglerStateContentPresenter.Content = OnState;
             }
         }
 
@@ -129,14 +123,12 @@ namespace custom_controls.controls
                 VisualStateManager.GoToState(this, "One", false);
                 Thumb thumb = GetTemplateChild("PART_Toggler") as Thumb;
                 Canvas.SetLeft(thumb, TrueXAxisCanvasCoordinate);
-                TogglerStateContentPresenter.Content = OnState;
             }
             else
             {
                 VisualStateManager.GoToState(this, "Zero", false);
                 Thumb thumb = GetTemplateChild("PART_Toggler") as Thumb;
                 Canvas.SetLeft(thumb, FalseXAxisCanvasCoordinate);
-                TogglerStateContentPresenter.Content = OffState;
             }
         }
     }

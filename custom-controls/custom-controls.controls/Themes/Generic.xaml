@@ -93,7 +93,21 @@
                                 </Thumb>
                             </Canvas>
                         </Border>
-                        <ContentPresenter Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Center" x:Name="PART_ToggleStateContentPresenter" />
+                        <TextBlock Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ToggleState}" Value="False">
+                                            <Setter Property="Text" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=OffState}" />
+                                        </DataTrigger>
+
+                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ToggleState}" Value="True">
+                                            <Setter Property="Text" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=OnState}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                    </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
