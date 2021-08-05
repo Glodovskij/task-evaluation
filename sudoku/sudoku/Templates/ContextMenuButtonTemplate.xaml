@@ -1,0 +1,33 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:sudoku">
+    <ControlTemplate x:Key="ContextMenuButton" TargetType="Button">
+        <ControlTemplate.Resources>
+            <local:SudokuCellMultiValueConverter x:Key="CellMultiValueConverter" />
+        </ControlTemplate.Resources>
+        <Button 
+            Content="{TemplateBinding Content}"
+            Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.ContextButtonClickedCommand}">
+            <Button.CommandParameter>
+                <MultiBinding Converter="{StaticResource CellMultiValueConverter}">
+                    <Binding Path="Content" RelativeSource="{RelativeSource Self}"/>
+                    <Binding RelativeSource="{RelativeSource AncestorType=ContextMenu}"></Binding>
+                </MultiBinding>
+            </Button.CommandParameter>
+        </Button>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="SudokuCellContextMenu" TargetType="ContextMenu">
+        <UniformGrid Columns="3" Rows="3" Width="60" Height="60">
+            <Button Content="1" Template="{StaticResource ContextMenuButton}" />
+            <Button Content="2" Template="{StaticResource ContextMenuButton}" />
+            <Button Content="3" Template="{StaticResource ContextMenuButton}" />
+            <Button Content="4" Template="{StaticResource ContextMenuButton}" />
+            <Button Content="5" Template="{StaticResource ContextMenuButton}" />
+            <Button Content="6" Template="{StaticResource ContextMenuButton}" />
+            <Button Content="7" Template="{StaticResource ContextMenuButton}" />
+            <Button Content="8" Template="{StaticResource ContextMenuButton}" />
+            <Button Content="9" Template="{StaticResource ContextMenuButton}" />
+        </UniformGrid>
+    </ControlTemplate>
+</ResourceDictionary>
