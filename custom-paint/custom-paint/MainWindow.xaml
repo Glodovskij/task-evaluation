@@ -20,11 +20,11 @@
     </Window.DataContext>
     <DockPanel>
         <ToolBar DockPanel.Dock="Top" Height="30" VerticalAlignment="Top" Template="{StaticResource ToolBarTemplate}" />
-        
-        <ItemsControl ItemsSource="{Binding Shapes}">
+
+        <ItemsControl ItemsSource="{Binding Shapes}" DockPanel.Dock="Bottom">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <Canvas x:Name="drawCanvas">
+                    <Canvas x:Name="drawCanvas" ClipToBounds="True">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseMove">
                                 <i:InvokeCommandAction PassEventArgsToCommand="True" 
@@ -51,6 +51,5 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>
-
     </DockPanel>
 </Window>

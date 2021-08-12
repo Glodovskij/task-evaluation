@@ -61,7 +61,7 @@ namespace custom_paint.ViewModels
 
             ShapessReadyToRedo = new();
             Shapes = new();
-            CurrentFigure = new Ellipse();
+            CurrentFigure = new Polyline();
             IsErasing = false;
             StrokeThikness = 1;
 
@@ -158,7 +158,8 @@ namespace custom_paint.ViewModels
             {
                 if (mouseArgs.MouseEventArgs.LeftButton == MouseButtonState.Pressed)
                 {
-                    (CurrentFigure as Polyline).Points.Add(mouseArgs.Coordinates);
+                    if(mouseArgs.Coordinates.Y >= 0)
+                        (CurrentFigure as Polyline).Points.Add(mouseArgs.Coordinates);
                 }
             }
             if (CurrentFigure is Ellipse || CurrentFigure is Rectangle)
