@@ -1,0 +1,46 @@
+﻿<Window x:Class="custom_paint_inccanvas.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:custom_paint_inccanvas.ViewModels"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:converters="clr-namespace:custom_paint_inccanvas.Converters"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Window.DataContext>
+        <vm:CanvasViewModel />
+    </Window.DataContext>
+    <Window.InputBindings>
+        <KeyBinding Gesture="CTRL+Z" Command="{Binding UndoCommand}" />
+        <KeyBinding Gesture="CTRL+Y" Command="{Binding RedoCommand}" />
+    </Window.InputBindings>
+    <Window.Resources>
+        <converters:MouseButtonEventArgsConverter x:Key="EventArgConverter"/>
+    </Window.Resources>
+    <DockPanel>
+        <ToolBar DockPanel.Dock="Top" Height="30" Template="{StaticResource ToolBarTemplate}"/>
+
+        <InkCanvas x:Name="incCanvas" DockPanel.Dock="Bottom" ClipToBounds="True" Strokes="{Binding StrokeCollection}" EditingMode="None">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseMove">
+                    <i:InvokeCommandAction PassEventArgsToCommand="True" 
+                                                   EventArgsConverter="{StaticResource EventArgConverter}"
+                                                   EventArgsConverterParameter="{Binding ElementName=incCanvas}"
+                                                   Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.MouseMoveCommand}" />
+                </i:EventTrigger>
+                <i:EventTrigger EventName="PreviewMouseDown">
+                    <i:InvokeCommandAction PassEventArgsToCommand="True" 
+                                                   EventArgsConverter="{StaticResource EventArgConverter}"
+                                                   EventArgsConverterParameter="{Binding ElementName=incCanvas}"
+                                                   Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.MouseDownCommand}"/>
+                </i:EventTrigger>
+
+                <i:EventTrigger EventName="MouseLeftButtonUp">
+                    <i:InvokeCommandAction PassEventArgsToCommand="True"
+                                                   Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.MouseLeftButtonUpCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </InkCanvas>
+    </DockPanel>
+</Window>
