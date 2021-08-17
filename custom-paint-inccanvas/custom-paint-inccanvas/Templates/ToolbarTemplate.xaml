@@ -40,148 +40,72 @@
             </Button>
 
             <Separator />
-            <Button Height="16" Width="16" Margin="5" Command="{Binding ChoseFigureToDrawCommand}" CommandParameter="{x:Type Polyline}">
-                <Button.Template>
-                    <ControlTemplate>
-                        <Image>
-                            <Image.Source>
-                                <DrawingImage>
-                                    <DrawingImage.Drawing>
-                                        <GeometryDrawing Brush="Black" Geometry="{StaticResource FreeDrawIcon}"/>
-                                    </DrawingImage.Drawing>
-                                </DrawingImage>
-                            </Image.Source>
-                        </Image>
-                    </ControlTemplate>
-                </Button.Template>
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding CurrentFigure, Converter={StaticResource DataToTypeConverter}}" Value="{x:Type Polyline}">
-                                <Setter Property="Effect">
-                                    <Setter.Value>
-                                        <DropShadowEffect BlurRadius="20" Color="Blue"/>
-                                    </Setter.Value>
-                                </Setter>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
-            <Button Height="16" Width="16" Margin="5" Command="{Binding ChoseFigureToDrawCommand}" CommandParameter="{x:Type Rectangle}">
-                <Button.Template>
-                    <ControlTemplate>
-                        <Image>
-                            <Image.Source>
-                                <DrawingImage>
-                                    <DrawingImage.Drawing>
-                                        <GeometryDrawing Brush="Black" Geometry="{StaticResource RectangleIcon}"/>
-                                    </DrawingImage.Drawing>
-                                </DrawingImage>
-                            </Image.Source>
-                        </Image>
-                    </ControlTemplate>
-                </Button.Template>
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding CurrentFigure, Converter={StaticResource DataToTypeConverter}}" Value="{x:Type Rectangle}">
-                                <Setter Property="Effect">
-                                    <Setter.Value>
-                                        <DropShadowEffect BlurRadius="20" Color="Blue"/>
-                                    </Setter.Value>
-                                </Setter>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
-            <Button Height="16" Width="16" Margin="5" Command="{Binding ChoseFigureToDrawCommand}" CommandParameter="{x:Type Ellipse}">
-                <Button.Template>
-                    <ControlTemplate>
-                        <Image>
-                            <Image.Source>
-                                <DrawingImage>
-                                    <DrawingImage.Drawing>
-                                        <GeometryDrawing Brush="Black" Geometry="{StaticResource EllipseIcon}"/>
-                                    </DrawingImage.Drawing>
-                                </DrawingImage>
-                            </Image.Source>
-                        </Image>
-                    </ControlTemplate>
-                </Button.Template>
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding CurrentFigure, Converter={StaticResource DataToTypeConverter}}" Value="{x:Type Ellipse}">
-                                <Setter Property="Effect">
-                                    <Setter.Value>
-                                        <DropShadowEffect BlurRadius="20" Color="Blue"/>
-                                    </Setter.Value>
-                                </Setter>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
-            <Button Height="16" Width="16" Margin="5" Command="{Binding ChoseFigureToDrawCommand}" CommandParameter="{x:Type Line}">
-                <Button.Template>
-                    <ControlTemplate>
-                        <Image>
-                            <Image.Source>
-                                <DrawingImage>
-                                    <DrawingImage.Drawing>
-                                        <GeometryDrawing Brush="Black" Geometry="{StaticResource LineIcon}"/>
-                                    </DrawingImage.Drawing>
-                                </DrawingImage>
-                            </Image.Source>
-                        </Image>
-                    </ControlTemplate>
-                </Button.Template>
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding CurrentFigure, Converter={StaticResource DataToTypeConverter}}" Value="{x:Type Line}">
-                                <Setter Property="Effect">
-                                    <Setter.Value>
-                                        <DropShadowEffect BlurRadius="20" Color="Blue"/>
-                                    </Setter.Value>
-                                </Setter>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
+            <ToggleButton Height="24" Width="24" Margin="5,0,5,0" Command="{Binding ChoseFigureToDrawCommand}" CommandParameter="{x:Type Polyline}" IsChecked="{Binding ButtonStates[0]}">
+                <ToggleButton.Content>
+                    <Image>
+                        <Image.Source>
+                            <DrawingImage>
+                                <DrawingImage.Drawing>
+                                    <GeometryDrawing Brush="Black" Geometry="{StaticResource FreeDrawIcon}"/>
+                                </DrawingImage.Drawing>
+                            </DrawingImage>
+                        </Image.Source>
+                    </Image>
+                </ToggleButton.Content>
+            </ToggleButton>
+            <ToggleButton Height="24" Width="24" Margin="5,0,5,0" Command="{Binding ChoseFigureToDrawCommand}" CommandParameter="{x:Type Rectangle}" IsChecked="{Binding ButtonStates[1]}">
+                <ToggleButton.Content>
+                    <Image>
+                        <Image.Source>
+                            <DrawingImage>
+                                <DrawingImage.Drawing>
+                                    <GeometryDrawing Brush="Black" Geometry="{StaticResource RectangleIcon}"/>
+                                </DrawingImage.Drawing>
+                            </DrawingImage>
+                        </Image.Source>
+                    </Image>
+                </ToggleButton.Content>
+            </ToggleButton>
+            <ToggleButton Height="24" Width="24" Margin="5,0,5,0" Command="{Binding ChoseFigureToDrawCommand}" CommandParameter="{x:Type Ellipse}" IsChecked="{Binding ButtonStates[2]}">
+                <ToggleButton.Content>
+                    <Image>
+                        <Image.Source>
+                            <DrawingImage>
+                                <DrawingImage.Drawing>
+                                    <GeometryDrawing Brush="Black" Geometry="{StaticResource EllipseIcon}"/>
+                                </DrawingImage.Drawing>
+                            </DrawingImage>
+                        </Image.Source>
+                    </Image>
+                </ToggleButton.Content>
+            </ToggleButton>
+            <ToggleButton Height="24" Width="24" Margin="5,0,5,0" Command="{Binding ChoseFigureToDrawCommand}" CommandParameter="{x:Type Line}" IsChecked="{Binding ButtonStates[3]}">
+                <ToggleButton.Content>
+                    <Image>
+                        <Image.Source>
+                            <DrawingImage>
+                                <DrawingImage.Drawing>
+                                    <GeometryDrawing Brush="Black" Geometry="{StaticResource LineIcon}"/>
+                                </DrawingImage.Drawing>
+                            </DrawingImage>
+                        </Image.Source>
+                    </Image>
+                </ToggleButton.Content>
+            </ToggleButton>
             <Separator />
-            <Button Height="16" Width="16" Margin="5" Command="{Binding ChoseFigureToDrawCommand}" CommandParameter="{x:Type eraser:Eraser}">
-                <Button.Template>
-                    <ControlTemplate>
-                        <Image>
-                            <Image.Source>
-                                <DrawingImage>
-                                    <DrawingImage.Drawing>
-                                        <GeometryDrawing x:Name="eraserGeometry" Brush="Black" Geometry="{StaticResource EraserIcon}"/>
-                                    </DrawingImage.Drawing>
-                                </DrawingImage>
-                            </Image.Source>
-                        </Image>
-
-                    </ControlTemplate>
-                </Button.Template>
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding CurrentFigure, Converter={StaticResource DataToTypeConverter}}" Value="{x:Type eraser:Eraser}">
-                                <Setter Property="Effect">
-                                    <Setter.Value>
-                                        <DropShadowEffect BlurRadius="20" Color="Blue"/>
-                                    </Setter.Value>
-                                </Setter>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
+            <ToggleButton Height="24" Width="24" Margin="5,0,5,0" Command="{Binding ChoseFigureToDrawCommand}" CommandParameter="{x:Type eraser:Eraser}" IsChecked="{Binding ButtonStates[4]}">
+                <ToggleButton.Content>
+                    <Image>
+                        <Image.Source>
+                            <DrawingImage>
+                                <DrawingImage.Drawing>
+                                    <GeometryDrawing x:Name="eraserGeometry" Brush="Black" Geometry="{StaticResource EraserIcon}"/>
+                                </DrawingImage.Drawing>
+                            </DrawingImage>
+                        </Image.Source>
+                    </Image>
+                </ToggleButton.Content>
+            </ToggleButton>
 
             <Label Content="Palette: " />
             <xctk:ColorPicker SelectedColor="{Binding SelectedColor}"  Width="48"/>

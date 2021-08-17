@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -22,11 +23,9 @@ namespace custom_paint_inccanvas.ViewModels
             set { _strokeCollection = value; OnPropertyChanged(); }
         }
 
-        public StrokeCollection StrokesReadyToRedo { get; set; }
+        private StrokeCollection StrokesReadyToRedo { get; set; }
 
-        public Stroke CurrentDrawingStroke { get; set; }
-
-        public ObservableCollection<Shape> ShapessReadyToRedo { get; set; }
+        private Stroke CurrentDrawingStroke { get; set; }
 
         private Shape _currentFigure;
 
@@ -52,8 +51,20 @@ namespace custom_paint_inccanvas.ViewModels
             set { _strokeThikness = value; OnPropertyChanged(); }
         }
 
+        private InkCanvasEditingMode _editingMode;
+
+        public InkCanvasEditingMode CanvasEditingMode
+        {
+            get { return _editingMode; }
+            set { _editingMode = value;  OnPropertyChanged(); }
+        }
+
+        public ObservableCollection<bool> ButtonStates { get; set; }
+
+
+
         private Point FirstCoordinatePoint { get; set; }
-        public bool IsErasing { get; private set; }
+        private bool IsErasing { get; set; }
 
         public ICommand MouseMoveCommand { get; }
         public ICommand MouseDownCommand { get; }
@@ -73,7 +84,6 @@ namespace custom_paint_inccanvas.ViewModels
 
             StrokeCollection = new();
 
-            ShapessReadyToRedo = new();
             StrokesReadyToRedo = new();
 
             CurrentFigure = new Polyline();
@@ -81,6 +91,17 @@ namespace custom_paint_inccanvas.ViewModels
             StrokeThikness = 1;
 
             SelectedColor = Colors.Black;
+
+            CanvasEditingMode = InkCanvasEditingMode.None;
+
+            ButtonStates = new ObservableCollection<bool>();
+
+            for(int i = 0; i < 5; i++)
+            {
+                ButtonStates.Add(false);
+            }
+
+            ButtonStates[0] = true;
         }
 
         private void MouseDownCommandHandler(object obj)
@@ -102,7 +123,7 @@ namespace custom_paint_inccanvas.ViewModels
                 }
             };
 
-            if(IsErasing)
+            if (IsErasing)
             {
                 CurrentDrawingStroke.DrawingAttributes.Color = Colors.White;
             }
@@ -114,7 +135,7 @@ namespace custom_paint_inccanvas.ViewModels
 
         public void LeftMouseButtonUpCommandHandler(object obj)
         {
-            CurrentFigure = Activator.CreateInstance(CurrentFigure.GetType()) as Shape;
+            CurrentDrawingStroke = new Stroke(new StylusPointCollection() { new StylusPoint { X = FirstCoordinatePoint.X, Y = FirstCoordinatePoint.Y } });
             FirstCoordinatePoint = new Point(0, 0);
         }
 
@@ -125,28 +146,29 @@ namespace custom_paint_inccanvas.ViewModels
 
         private void DrawShape(MouseEventArgsWithCoordinates mouseArgs)
         {
-            if (mouseArgs.MouseEventArgs.LeftButton == MouseButtonState.Pressed)
-            {
-                if (CurrentFigure is Polyline || CurrentFigure is Eraser)
-                {
-                    CurrentDrawingStroke.StylusPoints.Add(new StylusPoint(mouseArgs.Coordinates.X, mouseArgs.Coordinates.Y));
-                }
-                if (CurrentFigure is Ellipse)
-                {
-                    if (mouseArgs.MouseEventArgs.LeftButton == MouseButtonState.Pressed)
-                    {
-                        Point endPoint = mouseArgs.Coordinates;
-                        List<Point> ellipsePoints = GenerateEclipseGeometry(FirstCoordinatePoint, endPoint);
-                        StylusPointCollection figurePointCollection = new StylusPointCollection(ellipsePoints);
+            if (mouseArgs.MouseEventArgs.LeftButton != MouseButtonState.Pressed)
+                return;
 
-                        CurrentDrawingStroke.StylusPoints = new StylusPointCollection(figurePointCollection);
-                    }
-                }
-                if (CurrentFigure is Rectangle)
+            if (CurrentFigure is Polyline || CurrentFigure is Eraser)
+            {
+                CurrentDrawingStroke.StylusPoints.Add(new StylusPoint(mouseArgs.Coordinates.X, mouseArgs.Coordinates.Y));
+            }
+            if (CurrentFigure is Ellipse)
+            {
+                if (mouseArgs.MouseEventArgs.LeftButton == MouseButtonState.Pressed)
                 {
                     Point endPoint = mouseArgs.Coordinates;
-                    Point initialPoint = FirstCoordinatePoint;
-                    List<Point> pointList = new List<Point>
+                    List<Point> ellipsePoints = GenerateEclipseGeometry(FirstCoordinatePoint, endPoint);
+                    StylusPointCollection figurePointCollection = new StylusPointCollection(ellipsePoints);
+
+                    CurrentDrawingStroke.StylusPoints = new StylusPointCollection(figurePointCollection);
+                }
+            }
+            if (CurrentFigure is Rectangle)
+            {
+                Point endPoint = mouseArgs.Coordinates;
+                Point initialPoint = FirstCoordinatePoint;
+                List<Point> pointList = new List<Point>
                     {
                         new Point(initialPoint.X, initialPoint.Y),
                         new Point(endPoint.X, initialPoint.Y),
@@ -155,20 +177,20 @@ namespace custom_paint_inccanvas.ViewModels
                         new Point(initialPoint.X, initialPoint.Y),
                     };
 
-                    CurrentDrawingStroke.StylusPoints = new StylusPointCollection(pointList);
-                }
-                if (CurrentFigure is Line)
-                {
-                    Point endPoint = mouseArgs.Coordinates;
-
-                    List<Point> pointList = new();
-
-                    pointList.Add(FirstCoordinatePoint);
-                    pointList.Add(endPoint);
-
-                    CurrentDrawingStroke.StylusPoints = new StylusPointCollection(pointList);
-                }
+                CurrentDrawingStroke.StylusPoints = new StylusPointCollection(pointList);
             }
+            if (CurrentFigure is Line)
+            {
+                Point endPoint = mouseArgs.Coordinates;
+
+                List<Point> pointList = new();
+
+                pointList.Add(FirstCoordinatePoint);
+                pointList.Add(endPoint);
+
+                CurrentDrawingStroke.StylusPoints = new StylusPointCollection(pointList);
+            }
+
         }
 
         private List<Point> GenerateEclipseGeometry(Point st, Point ed)
@@ -189,13 +211,38 @@ namespace custom_paint_inccanvas.ViewModels
             if ((obj as Type).Name == "Eraser")
             {
                 IsErasing = true;
+                CanvasEditingMode = InkCanvasEditingMode.EraseByPoint;
             }
             else
             {
                 IsErasing = false;
+                CanvasEditingMode = InkCanvasEditingMode.None;
             }
             CurrentFigure = Activator.CreateInstance(obj as Type) as Shape;
 
+            for(int i = 0; i < ButtonStates.Count; i++)
+            {
+                ButtonStates[i] = false;
+            }
+
+            switch(CurrentFigure.GetType().Name)
+            {
+                case nameof(Polyline):
+                    ButtonStates[0] = true;
+                    break;
+                case nameof(Rectangle):
+                    ButtonStates[1] = true;
+                    break;
+                case nameof(Ellipse):
+                    ButtonStates[2] = true;
+                    break;
+                case nameof(Line):
+                    ButtonStates[3] = true;
+                    break;
+                case nameof(Eraser):
+                    ButtonStates[4] = true;
+                    break;
+            }
         }
 
         private void UndoCommandHandler(object obj)
