@@ -6,7 +6,6 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/Styles.xaml"/>
                 <ResourceDictionary Source="Resources/ToolBarIcons.xaml"/>
                 <ResourceDictionary Source="Templates/ToolbarTemplate.xaml"/>
             </ResourceDictionary.MergedDictionaries>
