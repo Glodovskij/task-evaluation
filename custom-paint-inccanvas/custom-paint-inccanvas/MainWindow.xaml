@@ -20,7 +20,6 @@
     </Window.Resources>
     <DockPanel>
         <ToolBar DockPanel.Dock="Top" Height="30" Template="{StaticResource ToolBarTemplate}"/>
-
         <InkCanvas x:Name="incCanvas" DockPanel.Dock="Bottom" ClipToBounds="True" Strokes="{Binding StrokeCollection}" EditingMode="None">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseMove">

@@ -23,7 +23,13 @@ namespace custom_paint_inccanvas.ViewModels
             set { _strokeCollection = value; OnPropertyChanged(); }
         }
 
-        private StrokeCollection StrokesReadyToRedo { get; set; }
+        private StrokeCollection _strokesReadyToRedo;
+
+        public StrokeCollection StrokesReadyToRedo
+        {
+            get { return _strokesReadyToRedo; }
+            set { _strokesReadyToRedo = value; OnPropertyChanged(); }
+        }
 
         private Stroke CurrentDrawingStroke { get; set; }
 
@@ -60,8 +66,6 @@ namespace custom_paint_inccanvas.ViewModels
         }
 
         public ObservableCollection<bool> ButtonStates { get; set; }
-
-
 
         private Point FirstCoordinatePoint { get; set; }
         private bool IsErasing { get; set; }
